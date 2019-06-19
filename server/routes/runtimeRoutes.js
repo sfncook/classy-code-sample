@@ -14,6 +14,7 @@ module.exports = class RuntimeRoutes {
     this.linkRoutes = this.linkRoutes.bind(this);
     this.getUsers = this.getUsers.bind(this);
     this.getUser = this.getUser.bind(this);
+    this.getUserWithQuery = this.getUserWithQuery.bind(this);
     this.getUserGroups = this.getUserGroups.bind(this);
     this.getGroups = this.getGroups.bind(this);
   }
@@ -22,6 +23,10 @@ module.exports = class RuntimeRoutes {
     httpServer.registerGet(
       '/users',
       this.getUsers
+    );
+    httpServer.registerGet(
+      '/users/query',
+      this.getUserWithQuery
     );
     httpServer.registerGet(
       '/users/:uid',
@@ -59,7 +64,19 @@ module.exports = class RuntimeRoutes {
     } catch (e) {
       this.logger.error(e);
       console.trace(e);
-      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getUsers' });
+      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getUser' });
+    }
+  }
+
+  async getUserWithQuery(req, res) {
+    try {
+      const lines = await this.fileLoader.loadFile(this.usersPath);
+      const users = this.userParser.parse(lines);
+      res.json(this.userParser.findAll(users, req.query));
+    } catch (e) {
+      this.logger.error(e);
+      console.trace(e);
+      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getUserWithQuery' });
     }
   }
 
@@ -77,7 +94,7 @@ module.exports = class RuntimeRoutes {
     } catch (e) {
       this.logger.error(e);
       console.trace(e);
-      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getUsers' });
+      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getUserGroups' });
     }
   }
 
