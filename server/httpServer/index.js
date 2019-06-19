@@ -2,8 +2,6 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const cors = require('cors');
-const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload');
 
 module.exports = class HttpServer {
   constructor(config, logger) {
@@ -25,12 +23,6 @@ module.exports = class HttpServer {
     this.app = express();
     this.httpServer = http.createServer(this.app);
 
-    this.app.use(bodyParser.urlencoded({
-      extended: true
-    }));
-    this.app.use(fileUpload());
-    this.app.use(bodyParser.json());
-
     // CORS is for when you're running locally and running server and client separately (assuming client is listening on port 3000)
     const corsOptions =  {
       origin: corsOrigins,
@@ -38,13 +30,6 @@ module.exports = class HttpServer {
       credentials: true,
     };
     this.app.use(cors(corsOptions));
-
-    // Default routes
-    const cacheControlMaxAge =  365/*days*/ * 24/*hrs*/ * 60/*min*/ * 60/*sec*/;
-    this.app.use('/images', express.static(
-      path.join(__dirname, '../images'), { cacheControl: true, setHeaders: (res)=>res.setHeader("Cache-Control","max-age="+cacheControlMaxAge) }
-    ));
-    this.app.use(express.static(path.join(__dirname, '../../dashboardUi/build')));
   }
 
   _logRequest(req, res, next) {
@@ -96,14 +81,6 @@ module.exports = class HttpServer {
 
   startListening() {
     this.app.use(this._defaultErrorHandler);
-
-
-    // The "catchall" handler: for any request that doesn't
-    // match one of the registered routes, send back React's index.html file.
-    this.app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '../../dashboardUi/build/index.html'));
-    });
-
     this.httpServer.listen(this.port);
     this.logger.info('Listening on port:'+this.port );
   }
