@@ -13,12 +13,17 @@ module.exports = class RuntimeRoutes {
 
     this.linkRoutes = this.linkRoutes.bind(this);
     this.getUsers = this.getUsers.bind(this);
+    this.getGroups = this.getGroups.bind(this);
   }
 
   linkRoutes(httpServer) {
     httpServer.registerGet(
       '/users',
       this.getUsers
+    );
+    httpServer.registerGet(
+      '/groups',
+      this.getGroups
     );
   }
 
@@ -29,6 +34,16 @@ module.exports = class RuntimeRoutes {
       res.json(users);
     } catch (e) {
       res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getUsers' });
+    }
+  }
+
+  async getGroups(req, res) {
+    try {
+      const lines = await this.fileLoader.loadFile(this.groupsPath);
+      const groups = this.groupParser.parse(lines);
+      res.json(groups);
+    } catch (e) {
+      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getGroups' });
     }
   }
 
