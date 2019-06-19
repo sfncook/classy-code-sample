@@ -3,6 +3,8 @@ const _ = require('lodash');
 module.exports = class UserParser {
   constructor() {
     this.parse = this.parse.bind(this);
+    this.findAll = this.findAll.bind(this);
+    this.findSingle = this.findSingle.bind(this);
   }
 
   parse(userStrs) {
@@ -17,6 +19,19 @@ module.exports = class UserParser {
         shell:tokens[6]
       };
     });
+  }
+
+  findAll(users, queryParams) {
+    return _.filter(users, queryParams);
+  }
+
+  findSingle(users, queryParams) {
+    const objs = this.findAll(users, queryParams);
+    if(objs && objs.length) {
+      return objs[0];
+    } else {
+      return undefined;
+    }
   }
 
 };
