@@ -21,12 +21,12 @@ module.exports = class GroupRoutes {
       this.getGroups
     );
     httpServer.registerGet(
-      '/groups/:gid',
-      this.getGroup
-    );
-    httpServer.registerGet(
       '/groups/query',
       this.getGroupsWithQuery
+    );
+    httpServer.registerGet(
+      '/groups/:gid',
+      this.getGroup
     );
   }
 
