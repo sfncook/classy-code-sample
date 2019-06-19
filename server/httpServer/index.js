@@ -16,9 +16,6 @@ module.exports = class HttpServer {
     this._defaultErrorHandler = this._defaultErrorHandler.bind(this);
 
     this.registerGet = this.registerGet.bind(this);
-    this.registerPut = this.registerPut.bind(this);
-    this.registerPost = this.registerPost.bind(this);
-    this.registerDelete = this.registerDelete.bind(this);
 
     this.app = express();
     this.httpServer = http.createServer(this.app);

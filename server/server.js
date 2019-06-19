@@ -18,6 +18,12 @@ console.log('************************************************************');
   const HttpServer = require('./httpServer');
   const httpServer = new HttpServer(config, logger);
 
+  const readline = require('readline');
+  const FileLoader = require('./fileLoader');
+  const fileLoader = new FileLoader(logger, readline);
+  const lines = await fileLoader.loadFile('/etc/passwd');
+  console.log('lines.length:',lines.length);
+
   const RuntimeRoutes = require('./routes/runtimeRoutes');
   const runtimeRoutes = new RuntimeRoutes(logger);
   runtimeRoutes.linkRoutes(httpServer);
