@@ -16,4 +16,16 @@ module.exports = class GroupParser {
     });
   }
 
+  findAll(groups, queryParams) {
+    const foundGroups = _.filter(groups, queryParams);
+    let groupsWithMembers = [];
+    if(queryParams.members) {
+      groupsWithMembers = _.filter(groups, group=>{
+        const intersection = _.intersection(group.members, queryParams.members);
+        return intersection.length>0;
+      });
+    }
+    return [...foundGroups, ...groupsWithMembers];
+  }
+
 };
