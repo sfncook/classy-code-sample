@@ -1,8 +1,7 @@
-const fs = require('fs');
-
 module.exports = class FileLoader {
-  constructor(logger, readline) {
+  constructor(logger, fs, readline) {
     this.logger = logger;
+    this.fs = fs;
     this.readline = readline;
 
     this.loadFile = this.loadFile.bind(this);
@@ -10,8 +9,9 @@ module.exports = class FileLoader {
 
   async loadFile(path) {
     return new Promise((resolve, reject)=>{
-      fs.on('error', err=>{reject(`File not found:${path}`)});
-      const readInt = this.readline.createInterface({input: fs.createReadStream(path)});
+      const readStream = this.fs.createReadStream(path);
+      readStream.on('error', err=>{reject(`File not found:${path}`)});
+      const readInt = this.readline.createInterface({input:readStream});
       const lines = [];
       readInt.on('line', line=>{  
         lines.push(line);

@@ -18,14 +18,15 @@ console.log('************************************************************');
   const HttpServer = require('./httpServer');
   const httpServer = new HttpServer(config, logger);
 
+  const fs = require('fs');
   const readline = require('readline');
   const FileLoader = require('./fileLoader');
-  const fileLoader = new FileLoader(logger, readline);
+  const fileLoader = new FileLoader(logger, fs, readline);
   try {
     const lines = await fileLoader.loadFile('/etc/passwdx');
     console.log('lines.length:',lines.length);
   } catch(e) {
-    console.log('error');
+    console.log('error:',e);
   }
 
   const RuntimeRoutes = require('./routes/runtimeRoutes');
