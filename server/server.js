@@ -35,9 +35,13 @@ console.log('************************************************************');
   const GroupParser = require('./groupParser');
   const groupParser = new GroupParser();
 
-  const RuntimeRoutes = require('./routes/runtimeRoutes');
-  const runtimeRoutes = new RuntimeRoutes(logger, config, fileLoader, userParser, groupParser);
-  runtimeRoutes.linkRoutes(httpServer);
+  const UserRoutes = require('./routes/userRoutes');
+  const userRoutes = new UserRoutes(logger, config, fileLoader, userParser, groupParser);
+  userRoutes.linkRoutes(httpServer);
+
+  const GroupRoutes = require('./routes/groupRoutes');
+  const groupRoutes = new GroupRoutes(logger, config, fileLoader, userParser, groupParser);
+  groupRoutes.linkRoutes(httpServer);
 
   httpServer.startListening();
 })();
