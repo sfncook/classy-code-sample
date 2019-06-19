@@ -24,12 +24,12 @@ module.exports = class UserRoutes {
       this.getUsers
     );
     httpServer.registerGet(
-      '/users/:uid',
-      this.getUser
-    );
-    httpServer.registerGet(
       '/users/query',
       this.getUsersWithQuery
+    );
+    httpServer.registerGet(
+      '/users/:uid',
+      this.getUser
     );
     httpServer.registerGet(
       '/users/:uid/groups',
@@ -84,7 +84,7 @@ module.exports = class UserRoutes {
 
       const groupsStrs = await this.fileLoader.loadFile(this.groupsPath);
       const allGroups = this.groupParser.parse(groupsStrs);
-      const groupsForUser = this.groupParser.findAll(allGroups, {members:[user.name]});
+      const groupsForUser = this.groupParser.findAll(allGroups, {member:[user.name]});
       res.json(groupsForUser);
     } catch (e) {
       this.logger.error(e);

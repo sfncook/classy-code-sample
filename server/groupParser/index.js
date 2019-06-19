@@ -19,9 +19,9 @@ module.exports = class GroupParser {
   findAll(groups, queryParams) {
     const foundGroups = _.filter(groups, queryParams);
     let groupsWithMembers = [];
-    if(queryParams.members) {
+    if(queryParams.member) {
       groupsWithMembers = _.filter(groups, group=>{
-        const intersection = _.intersection(group.members, queryParams.members);
+        const intersection = _.intersection(group.members, queryParams.member);
         return intersection.length>0;
       });
     }
