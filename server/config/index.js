@@ -10,6 +10,23 @@ const config = convict({
     env: "NODE_ENV"
   },
 
+  runtime:{
+    usersPath: {
+      doc: "Path to the file from which to extract user data",
+      format: String,
+      default: '/etc/passwd',
+      env: "USERS_PATH",
+      arg: "usersPath"
+    },
+    groupsPath: {
+      doc: "Path to the file from which to extract group data",
+      format: String,
+      default: '/etc/group',
+      env: "GROUPS_PATH",
+      arg: "groupsPath"
+    },
+  },
+
   logger:{
     level: {
       doc: "Log level error,warn,info,debug,verbose,silly",

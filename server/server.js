@@ -22,15 +22,21 @@ console.log('************************************************************');
   const readline = require('readline');
   const FileLoader = require('./fileLoader');
   const fileLoader = new FileLoader(logger, fs, readline);
-  try {
-    const lines = await fileLoader.loadFile('/etc/passwdx');
-    console.log('lines.length:',lines.length);
-  } catch(e) {
-    console.log('error:',e);
-  }
+  // try {
+  //   const lines = await fileLoader.loadFile('/etc/passwdx');
+  //   console.log('lines.length:',lines.length);
+  // } catch(e) {
+  //   console.log('error:',e);
+  // }
+
+  const UserParser = require('./userParser');
+  const userParser = new UserParser();
+
+  const GroupParser = require('./groupParser');
+  const groupParser = new GroupParser();
 
   const RuntimeRoutes = require('./routes/runtimeRoutes');
-  const runtimeRoutes = new RuntimeRoutes(logger);
+  const runtimeRoutes = new RuntimeRoutes(logger, config, fileLoader, userParser, groupParser);
   runtimeRoutes.linkRoutes(httpServer);
 
   httpServer.startListening();

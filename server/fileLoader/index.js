@@ -13,8 +13,10 @@ module.exports = class FileLoader {
       readStream.on('error', err=>{reject(`File not found:${path}`)});
       const readInt = this.readline.createInterface({input:readStream});
       const lines = [];
-      readInt.on('line', line=>{  
-        lines.push(line);
+      readInt.on('line', line=>{
+        if(!line.startsWith('#')) {
+          lines.push(line);
+        }
       });
       readInt.on('close', ()=>{
         resolve(lines);

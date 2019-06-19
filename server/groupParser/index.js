@@ -1,0 +1,19 @@
+const _ = require('lodash');
+
+module.exports = class GroupParser {
+  constructor() {
+    this.parse = this.parse.bind(this);
+  }
+
+  parse(groupStrs) {
+    return _.map(groupStrs, userString=>{
+      const tokens = userString.split(':');
+      return {
+        name:tokens[0],
+        gid:tokens[2],
+        members:tokens[3].split(',')
+      };
+    });
+  }
+
+};
