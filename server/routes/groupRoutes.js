@@ -3,16 +3,15 @@ const SERVER_ERROR_CODE = 500;
 
 module.exports = class GroupRoutes {
 
-  constructor(logger, config, fileLoader, userParser, groupParser) {
+  constructor(logger, config, fileLoader, groupParser) {
     this.logger = logger;
     this.fileLoader = fileLoader;
-    this.userParser = userParser;
     this.groupParser = groupParser;
-    this.usersPath = config.get('runtime.usersPath');
     this.groupsPath = config.get('runtime.groupsPath');
 
     this.linkRoutes = this.linkRoutes.bind(this);
     this.getGroups = this.getGroups.bind(this);
+    this.getGroup = this.getGroup.bind(this);
     this.getGroupsWithQuery = this.getGroupsWithQuery.bind(this);
   }
 
@@ -20,6 +19,10 @@ module.exports = class GroupRoutes {
     httpServer.registerGet(
       '/groups',
       this.getGroups
+    );
+    httpServer.registerGet(
+      '/groups/:gid',
+      this.getGroup
     );
     httpServer.registerGet(
       '/groups/query',
@@ -34,6 +37,20 @@ module.exports = class GroupRoutes {
       res.json(groups);
     } catch (e) {
       res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getGroups' });
+    }
+  }
+
+  async getGroup(req, res) {
+    try {
+      const gid = req.params.gid;
+      const lines = await this.fileLoader.loadFile(this.groupsPath);
+      const groups = this.groupParser.parse(lines);
+      const group = this.groupParser.findSingle(groups, {gid:gid});
+      res.json(group);
+    } catch (e) {
+      this.logger.error(e);
+      console.trace(e);
+      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getGroup' });
     }
   }
 

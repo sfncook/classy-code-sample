@@ -28,4 +28,13 @@ module.exports = class GroupParser {
     return [...foundGroups, ...groupsWithMembers];
   }
 
+  findSingle(groups, queryParams) {
+    const objs = this.findAll(groups, queryParams);
+    if(objs && objs.length) {
+      return objs[0];
+    } else {
+      return undefined;
+    }
+  }
+
 };

@@ -40,7 +40,7 @@ console.log('************************************************************');
   userRoutes.linkRoutes(httpServer);
 
   const GroupRoutes = require('./routes/groupRoutes');
-  const groupRoutes = new GroupRoutes(logger, config, fileLoader, userParser, groupParser);
+  const groupRoutes = new GroupRoutes(logger, config, fileLoader, groupParser);
   groupRoutes.linkRoutes(httpServer);
 
   httpServer.startListening();
