@@ -18,5 +18,9 @@ console.log('************************************************************');
   const HttpServer = require('./httpServer');
   const httpServer = new HttpServer(config, logger);
 
+  const RuntimeRoutes = require('./routes/runtimeRoutes');
+  const runtimeRoutes = new RuntimeRoutes(logger);
+  runtimeRoutes.linkRoutes(httpServer);
+
   httpServer.startListening();
 })();

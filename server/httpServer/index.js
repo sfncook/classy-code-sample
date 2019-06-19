@@ -37,29 +37,8 @@ module.exports = class HttpServer {
     next();
   }
 
-  registerGet() {
-    let args = [...arguments];
-    args.splice(args.length-2, 0, this._logRequest);
-    this.app.get(...args);
-  }
-
-  registerPut() {
-    let args = [...arguments];
-    args.splice(args.length-2, 0, this._logRequest);
-    this.app.put(...args);
-  }
-
-  registerPost() {
-    let args = [...arguments];
-    args.splice(args.length-2, 0, this._logRequest);
-    this.app.post(...args);
-  }
-
-
-  registerDelete() {
-    let args = [...arguments];
-    args.splice(args.length-2, 0, this._logRequest);
-    this.app.delete(...args);
+  registerGet(path, callback) {
+    this.app.get(path, this._logRequest, callback);
   }
 
   getServer() {
