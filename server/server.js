@@ -21,8 +21,12 @@ console.log('************************************************************');
   const readline = require('readline');
   const FileLoader = require('./fileLoader');
   const fileLoader = new FileLoader(logger, readline);
-  const lines = await fileLoader.loadFile('/etc/passwd');
-  console.log('lines.length:',lines.length);
+  try {
+    const lines = await fileLoader.loadFile('/etc/passwdx');
+    console.log('lines.length:',lines.length);
+  } catch(e) {
+    console.log('error');
+  }
 
   const RuntimeRoutes = require('./routes/runtimeRoutes');
   const runtimeRoutes = new RuntimeRoutes(logger);
