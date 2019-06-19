@@ -14,7 +14,8 @@ module.exports = class UserRoutes {
     this.linkRoutes = this.linkRoutes.bind(this);
     this.getUsers = this.getUsers.bind(this);
     this.getUser = this.getUser.bind(this);
-    this.getUserWithQuery = this.getUserWithQuery.bind(this);
+    this.getUsersWithQuery = this.getUsersWithQuery.bind(this);
+    this.getUserGroups = this.getUserGroups.bind(this);
   }
 
   linkRoutes(httpServer) {
@@ -23,12 +24,16 @@ module.exports = class UserRoutes {
       this.getUsers
     );
     httpServer.registerGet(
-      '/users/query',
-      this.getUserWithQuery
-    );
-    httpServer.registerGet(
       '/users/:uid',
       this.getUser
+    );
+    httpServer.registerGet(
+      '/users/query',
+      this.getUsersWithQuery
+    );
+    httpServer.registerGet(
+      '/users/:uid/groups',
+      this.getUserGroups
     );
   }
 
@@ -58,7 +63,7 @@ module.exports = class UserRoutes {
     }
   }
 
-  async getUserWithQuery(req, res) {
+  async getUsersWithQuery(req, res) {
     try {
       const lines = await this.fileLoader.loadFile(this.usersPath);
       const users = this.userParser.parse(lines);
@@ -66,7 +71,25 @@ module.exports = class UserRoutes {
     } catch (e) {
       this.logger.error(e);
       console.trace(e);
-      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getUserWithQuery' });
+      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getUsersWithQuery' });
+    }
+  }
+
+  async getUserGroups(req, res) {
+    try {
+      const uid = req.params.uid;
+      const lines = await this.fileLoader.loadFile(this.usersPath);
+      const users = this.userParser.parse(lines);
+      const user = this.userParser.findSingle(users, {uid:uid});
+
+      const groupsStrs = await this.fileLoader.loadFile(this.groupsPath);
+      const allGroups = this.groupParser.parse(groupsStrs);
+      const groupsForUser = this.groupParser.findAll(allGroups, {members:[user.name]});
+      res.json(groupsForUser);
+    } catch (e) {
+      this.logger.error(e);
+      console.trace(e);
+      res.status(SERVER_ERROR_CODE).json({ msg: 'Error while processing getUserGroups' });
     }
   }
 
