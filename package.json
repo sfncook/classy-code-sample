@@ -1,0 +1,28 @@
+{
+  "name": "classy-code-sample",
+  "version": "0.0.1",
+  "description": "Code sample for Classy interview",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "mocha server/tests --recursive --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sfncook/classy-code-sample.git"
+  },
+  "author": "sfncook@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "sinon": "^7.2.3",
+    "sinon-chai": "^3.3.0",
+    "sinon-express-mock": "^2.1.0"
+  }
+}
