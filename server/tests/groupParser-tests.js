@@ -20,11 +20,7 @@ describe('GroupParser Tests', ()=>{
     it(`length one`, async ()=>{
       const groupStrs = ['one:*:two:three'];
       const expectedResponse = [
-        {
-          name:'one',
-          gid:'two',
-          members:['three']
-        }
+        {name:'one',gid:'two',members:['three']}
       ];
 
       const actualResponse = await groupParser.parse(groupStrs);
@@ -91,6 +87,160 @@ describe('GroupParser Tests', ()=>{
       ];
 
       const actualResponse = await groupParser.parse(groupStrs);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+  });
+
+  describe('findAll', ()=>{
+    beforeEach(init);
+
+    it(`finds one by name`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1']},
+        {name:'one2',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {name:'one1'};
+      const expectedResponse = [{name:'one1',gid:'two1',members:['three1']}];
+
+      const actualResponse = await groupParser.findAll(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find two by name`, async ()=>{
+      const groups = [
+        {name:'one',gid:'two1',members:['three1']},
+        {name:'one',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {name:'one'};
+      const expectedResponse = [
+        {name:'one',gid:'two1',members:['three1']},
+        {name:'one',gid:'two2',members:['three2']},
+      ];
+
+      const actualResponse = await groupParser.findAll(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find NONE by name`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1']},
+        {name:'one2',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {name:'BAD_NAME'};
+      const expectedResponse = [];
+
+      const actualResponse = await groupParser.findAll(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find ALL by name`, async ()=>{
+      const groups = [
+        {name:'one',gid:'two1',members:['three1']},
+        {name:'one',gid:'two2',members:['three2']},
+        {name:'one',gid:'two3',members:['three3']},
+        {name:'one',gid:'two4',members:['three4']},
+        {name:'one',gid:'two5',members:['three5']},
+      ];
+      const query = {name:'one'};
+      const expectedResponse = groups;
+
+      const actualResponse = await groupParser.findAll(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find one by name & gid`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1']},
+        {name:'one2',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {name:'one1',gid:'two1'};
+      const expectedResponse = [{name:'one1',gid:'two1',members:['three1']}];
+
+      const actualResponse = await groupParser.findAll(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find one by one member string`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1']},
+        {name:'one2',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {member:'three2'};
+      const expectedResponse = [{name:'one2',gid:'two2',members:['three2']}];
+
+      const actualResponse = await groupParser.findAll(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find one by one member array`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1']},
+        {name:'one2',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {member:['three2']};
+      const expectedResponse = [{name:'one2',gid:'two2',members:['three2']}];
+
+      const actualResponse = await groupParser.findAll(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find two by multiple members`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1','three2']},
+        {name:'one2',gid:'two2',members:['three1','three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {member:['three1','three2']};
+      const expectedResponse = [
+        {name:'one1',gid:'two1',members:['three1','three2']},
+        {name:'one2',gid:'two2',members:['three1','three2']},
+      ];
+
+      const actualResponse = await groupParser.findAll(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find NONE by member`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1']},
+        {name:'one2',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {member:['BAD_MEMBER']};
+      const expectedResponse = [];
+
+      const actualResponse = await groupParser.findAll(groups, query);
 
       expect(actualResponse).to.eql(expectedResponse);
     });
