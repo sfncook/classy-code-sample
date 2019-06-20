@@ -6,11 +6,7 @@ console.log('************************************************************');
 
 (async ()=>{
 
-  const config = require('./config'); // Init and load config
-
-  if(config.get('env')!=='production' && !process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-    console.warn('WARNING: The GOOGLE_APPLICATION_CREDENTIALS environment is not set.  This will cause the server to fail to start.');
-  }
+  const config = require('./config');
 
   const Logger = require('./logger');
   const logger = new Logger(config);
@@ -22,12 +18,6 @@ console.log('************************************************************');
   const readline = require('readline');
   const FileLoader = require('./fileLoader');
   const fileLoader = new FileLoader(logger, fs, readline);
-  // try {
-  //   const lines = await fileLoader.loadFile('/etc/passwdx');
-  //   console.log('lines.length:',lines.length);
-  // } catch(e) {
-  //   console.log('error:',e);
-  // }
 
   const UserParser = require('./userParser');
   const userParser = new UserParser();
