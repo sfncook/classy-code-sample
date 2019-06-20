@@ -163,58 +163,58 @@ describe('UserParser Tests', ()=>{
 
   });
 
-  // describe('findSingle', ()=>{
-  //   beforeEach(init);
+  describe('findSingle', ()=>{
+    beforeEach(init);
 
-  //   it(`find one by name`, async ()=>{
-  //     const groups = [
-  //       {name:'one1',gid:'two1',members:['three1']},
-  //       {name:'one2',gid:'two2',members:['three2']},
-  //       {name:'one3',gid:'two3',members:['three3']},
-  //       {name:'one4',gid:'two4',members:['three4']},
-  //       {name:'one5',gid:'two5',members:['three5']},
-  //     ];
-  //     const query = {name:'one1'};
-  //     const expectedResponse = {name:'one1',gid:'two1',members:['three1']};
+    it(`find one by name`, async ()=>{
+      const users = [
+        {name:'one1',uid:'two1',gid:'three1',comment:'four1',home:'five1',shell:'six1'},
+        {name:'one2',uid:'two2',gid:'three2',comment:'four2',home:'five2',shell:'six2'},
+        {name:'one3',uid:'two3',gid:'three3',comment:'four3',home:'five3',shell:'six3'},
+        {name:'one4',uid:'two4',gid:'three4',comment:'four4',home:'five4',shell:'six4'},
+        {name:'one5',uid:'two5',gid:'three5',comment:'four5',home:'five5',shell:'six5'},
+      ];
+      const query = {name:'one1'};
+      const expectedResponse = {name:'one1',uid:'two1',gid:'three1',comment:'four1',home:'five1',shell:'six1'};
 
-  //     const actualResponse = await groupParser.findSingle(groups, query);
+      const actualResponse = await userParser.findSingle(users, query);
 
-  //     expect(actualResponse).to.eql(expectedResponse);
-  //   });
+      expect(actualResponse).to.eql(expectedResponse);
+    });
 
-  //   it(`find single and ignores second`, async ()=>{
-  //     const groups = [
-  //       {name:'one1',gid:'two1',members:['three1']},
-  //       {name:'one1',gid:'two2',members:['three2']},
-  //       {name:'one3',gid:'two3',members:['three3']},
-  //       {name:'one4',gid:'two4',members:['three4']},
-  //       {name:'one5',gid:'two5',members:['three5']},
-  //     ];
-  //     const query = {name:'one1'};
-  //     const expectedResponse = {name:'one1',gid:'two1',members:['three1']};
+    it(`find single and ignores second`, async ()=>{
+      const users = [
+        {name:'one',uid:'two1',gid:'three1',comment:'four1',home:'five1',shell:'six1'},
+        {name:'one',uid:'two2',gid:'three2',comment:'four2',home:'five2',shell:'six2'},
+        {name:'one3',uid:'two3',gid:'three3',comment:'four3',home:'five3',shell:'six3'},
+        {name:'one4',uid:'two4',gid:'three4',comment:'four4',home:'five4',shell:'six4'},
+        {name:'one5',uid:'two5',gid:'three5',comment:'four5',home:'five5',shell:'six5'},
+      ];
+      const query = {name:'one'};
+      const expectedResponse = {name:'one',uid:'two1',gid:'three1',comment:'four1',home:'five1',shell:'six1'};
 
-  //     const actualResponse = await groupParser.findSingle(groups, query);
+      const actualResponse = await userParser.findSingle(users, query);
 
-  //     expect(actualResponse).to.eql(expectedResponse);
-  //   });
+      expect(actualResponse).to.eql(expectedResponse);
+    });
 
-  //   it(`find single by gid`, async ()=>{
-  //     const groups = [
-  //       {name:'one1',gid:'two1',members:['three1']},
-  //       {name:'one2',gid:'two2',members:['three2']},
-  //       {name:'one3',gid:'two3',members:['three3']},
-  //       {name:'one4',gid:'two4',members:['three4']},
-  //       {name:'one5',gid:'two5',members:['three5']},
-  //     ];
-  //     const query = {gid:'two3'};
-  //     const expectedResponse = {name:'one3',gid:'two3',members:['three3']};
+    it(`find single by uid`, async ()=>{
+      const users = [
+        {name:'one1',uid:'two1',gid:'three1',comment:'four1',home:'five1',shell:'six1'},
+        {name:'one2',uid:'two2',gid:'three2',comment:'four2',home:'five2',shell:'six2'},
+        {name:'one3',uid:'two3',gid:'three3',comment:'four3',home:'five3',shell:'six3'},
+        {name:'one4',uid:'two4',gid:'three4',comment:'four4',home:'five4',shell:'six4'},
+        {name:'one5',uid:'two5',gid:'three5',comment:'four5',home:'five5',shell:'six5'},
+      ];
+      const query = {uid:'two5'};
+      const expectedResponse = {name:'one5',uid:'two5',gid:'three5',comment:'four5',home:'five5',shell:'six5'};
 
-  //     const actualResponse = await groupParser.findSingle(groups, query);
+      const actualResponse = await userParser.findSingle(users, query);
 
-  //     expect(actualResponse).to.eql(expectedResponse);
-  //   });
+      expect(actualResponse).to.eql(expectedResponse);
+    });
 
-  // });
+  });
 
 });
 
