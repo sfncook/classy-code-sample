@@ -62,12 +62,14 @@ describe('UserRoutes Tests', function () {
       mockUserParser.parse.restore();
       sinon.stub(mockUserParser, 'parse').returns(expectedResponse);
 
-      await userRoutes.getUsers(req, res, mockNext);
+      await userRoutes.getUsers(req, res);
 
       sinon.assert.calledOnce(mockFileLoader.loadFile);
       sinon.assert.calledWithExactly(mockFileLoader.loadFile, userRoutes.usersPath);
       sinon.assert.calledOnce(mockUserParser.parse);
       sinon.assert.calledWithExactly(mockUserParser.parse, expectedLoadFileLines);
+      sinon.assert.calledOnce(res.json);
+      sinon.assert.calledWithExactly(res.json, expectedResponse);
       sinon.assert.notCalled(mockNext);
     });
 
