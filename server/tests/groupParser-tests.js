@@ -95,7 +95,7 @@ describe('GroupParser Tests', ()=>{
   describe('findAll', ()=>{
     beforeEach(init);
 
-    it(`finds one by name`, async ()=>{
+    it(`find one by name`, async ()=>{
       const groups = [
         {name:'one1',gid:'two1',members:['three1']},
         {name:'one2',gid:'two2',members:['three2']},
@@ -244,6 +244,59 @@ describe('GroupParser Tests', ()=>{
 
       expect(actualResponse).to.eql(expectedResponse);
     });
+  });
+
+  describe('findSingle', ()=>{
+    beforeEach(init);
+
+    it(`find one by name`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1']},
+        {name:'one2',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {name:'one1'};
+      const expectedResponse = {name:'one1',gid:'two1',members:['three1']};
+
+      const actualResponse = await groupParser.findSingle(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find single and ignores second`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1']},
+        {name:'one1',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {name:'one1'};
+      const expectedResponse = {name:'one1',gid:'two1',members:['three1']};
+
+      const actualResponse = await groupParser.findSingle(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`find single by gid`, async ()=>{
+      const groups = [
+        {name:'one1',gid:'two1',members:['three1']},
+        {name:'one2',gid:'two2',members:['three2']},
+        {name:'one3',gid:'two3',members:['three3']},
+        {name:'one4',gid:'two4',members:['three4']},
+        {name:'one5',gid:'two5',members:['three5']},
+      ];
+      const query = {gid:'two3'};
+      const expectedResponse = {name:'one3',gid:'two3',members:['three3']};
+
+      const actualResponse = await groupParser.findSingle(groups, query);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
   });
 
 });
