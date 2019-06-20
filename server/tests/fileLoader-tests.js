@@ -4,23 +4,32 @@ const sinonChai = require("sinon-chai");
 const expect = chai.expect;
 chai.use(sinonChai);
 
-const MockConfig = require('./mocks/mockConfig');
+const MockReadStream = require('./mocks/mockReadStream');
+const MockReadInterface = require('./mocks/mockReadInterface');
+const MockReadline = require('./mocks/mockReadline');
+const MockFs = require('./mocks/mockFs');
 const MockLogger = require('./mocks/mockLogger');
 const FileLoader = require('../fileLoader');
 
 // Mocks for injection
-let mockLogger;
+let mockReadStream;
+let mockReadInterface;
 let mockReadline;
+let mockFs;
+let mockLogger;
 
 // Object to test
 let fileReader;
 
 const init = ()=>{
-  mockConfig = new MockConfig(sinon);
+  mockReadStream = new MockReadStream(sinon);
+  mockReadInterface = new MockReadInterface(sinon);
+  mockReadline = new MockReadline(sinon, mockReadInterface);
+  mockFs = new MockFs(sinon, mockReadStream);
   mockLogger = new MockLogger(sinon);
 
   //Object to test
-  fileReader = new FileLoader(mockLogger, mockReadline);
+  fileReader = new FileLoader(mockLogger, mockFs, mockReadline);
 };
 
 describe('FileLoader Tests', ()=>{
@@ -28,7 +37,10 @@ describe('FileLoader Tests', ()=>{
   describe('latest_telem_for_machine', ()=>{
     beforeEach(init);
 
-    it(`(positive) correctly builds the query`, async ()=>{
+    it(`(positive) correctly parses file`, async ()=>{
+      mockFs.createReadStream.restore();
+      sinon.stub(mockFs, 'createReadStream').returns(mockReadStream);
+
       // const machine_id = 1234;
       // const machine_id_int = 2345;
       // const expectedRawResponse = [{a:'fooa',b:'foob',c:'fooc'}];
