@@ -1,4 +1,5 @@
 
+const NOT_FOUND_CODE = 404;
 const SERVER_ERROR_CODE = 500;
 
 module.exports = class GroupRoutes {
@@ -46,7 +47,11 @@ module.exports = class GroupRoutes {
       const lines = await this.fileLoader.loadFile(this.groupsPath);
       const groups = this.groupParser.parse(lines);
       const group = this.groupParser.findSingle(groups, {gid:gid});
-      res.json(group);
+      if(group) {
+        res.json(group);
+      } else {
+        res.status(NOT_FOUND_CODE).send('Not Found');
+      }
     } catch (e) {
       this.logger.error(e);
       console.trace(e);
@@ -58,7 +63,12 @@ module.exports = class GroupRoutes {
     try {
       const lines = await this.fileLoader.loadFile(this.groupsPath);
       const groups = this.groupParser.parse(lines);
-      res.json(this.groupParser.findAll(groups, req.query));
+      const foundGroups = this.groupParser.findAll(groups, req.query);
+      if(foundGroups && foundGroups.length>0) {
+        res.json(foundGroups);
+      } else {
+        res.status(NOT_FOUND_CODE).send('Not Found');
+      }
     } catch (e) {
       this.logger.error(e);
       console.trace(e);

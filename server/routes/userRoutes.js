@@ -1,4 +1,5 @@
 
+const NOT_FOUND_CODE = 404;
 const SERVER_ERROR_CODE = 500;
 
 module.exports = class UserRoutes {
@@ -55,7 +56,11 @@ module.exports = class UserRoutes {
       const lines = await this.fileLoader.loadFile(this.usersPath);
       const users = this.userParser.parse(lines);
       const user = this.userParser.findSingle(users, {uid:uid});
-      res.json(user);
+      if(user) {
+        res.json(user);
+      } else {
+        res.status(NOT_FOUND_CODE).send('Not Found');
+      }
     } catch (e) {
       this.logger.error(e);
       console.trace(e);
@@ -67,7 +72,12 @@ module.exports = class UserRoutes {
     try {
       const lines = await this.fileLoader.loadFile(this.usersPath);
       const users = this.userParser.parse(lines);
-      res.json(this.userParser.findAll(users, req.query));
+      const foundUsers = this.userParser.findAll(users, req.query);
+      if(foundUsers && foundUsers.length>0) {
+        res.json(foundUsers);
+      } else {
+        res.status(NOT_FOUND_CODE).send('Not Found');
+      }
     } catch (e) {
       this.logger.error(e);
       console.trace(e);
@@ -80,12 +90,16 @@ module.exports = class UserRoutes {
       const uid = req.params.uid;
       const lines = await this.fileLoader.loadFile(this.usersPath);
       const users = this.userParser.parse(lines);
-      const user = this.userParser.findSingle(users, {uid:uid});
+      const user = this.userParser.findSingle(users, {uid:uid}) || {};
 
       const groupsStrs = await this.fileLoader.loadFile(this.groupsPath);
       const allGroups = this.groupParser.parse(groupsStrs);
       const groupsForUser = this.groupParser.findAll(allGroups, {member:[user.name]});
-      res.json(groupsForUser);
+      if(groupsForUser && groupsForUser.length>0) {
+        res.json(groupsForUser);
+      } else {
+        res.status(NOT_FOUND_CODE).send('Not Found');
+      }
     } catch (e) {
       this.logger.error(e);
       console.trace(e);
