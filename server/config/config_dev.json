@@ -1,0 +1,6 @@
+{
+  "runtime": {
+    "usersPath": "/etc/passwd",
+    "groupsPath": "/etc/group"
+  }
+}

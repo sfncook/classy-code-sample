@@ -9,4 +9,5 @@
 ## Run tests:
   `npm test`
 
-
+## Configuration:
+Modify `/server/config/config_dev.json`
