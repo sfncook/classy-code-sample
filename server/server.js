@@ -11,10 +11,19 @@ console.log('************************************************************');
   const Logger = require('./logger');
   const logger = new Logger(config);
 
+  const fs = require('fs');
+  const usersPath = config.get('runtime.usersPath');
+  const groupsPath = config.get('runtime.groupsPath');
+  if (!fs.existsSync(usersPath)) {
+    logger.error(`Path to users file does not exist: ${usersPath}`);
+  }
+  if (!fs.existsSync(groupsPath)) {
+    logger.error(`Path to groups file does not exist: ${groupsPath}`);
+  }
+
   const HttpServer = require('./httpServer');
   const httpServer = new HttpServer(config, logger);
 
-  const fs = require('fs');
   const readline = require('readline');
   const FileLoader = require('./fileLoader');
   const fileLoader = new FileLoader(logger, fs, readline);
