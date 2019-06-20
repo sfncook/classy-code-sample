@@ -56,7 +56,6 @@ module.exports = class GroupRoutes {
 
   async getGroupsWithQuery(req, res) {
     try {
-      console.log('query:',req.query);
       const lines = await this.fileLoader.loadFile(this.groupsPath);
       const groups = this.groupParser.parse(lines);
       res.json(this.groupParser.findAll(groups, req.query));

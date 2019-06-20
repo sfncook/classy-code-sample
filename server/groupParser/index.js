@@ -20,9 +20,10 @@ module.exports = class GroupParser {
     const foundGroups = _.filter(groups, queryParams);
     let groupsWithMembers = [];
     if(queryParams.member) {
+      const queryMembers = _.isArray(queryParams.member) ? queryParams.member : [queryParams.member];
       groupsWithMembers = _.filter(groups, group=>{
-        const intersection = _.intersection(group.members, queryParams.member);
-        return intersection.length>0;
+        const intersection = _.intersection(group.members, queryMembers);
+        return intersection.length>=queryMembers.length;
       });
     }
     return [...foundGroups, ...groupsWithMembers];
