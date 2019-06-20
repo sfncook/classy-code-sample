@@ -18,6 +18,8 @@ let mockReadline;
 let mockFs;
 let mockLogger;
 
+const samplePath = 'SAMPLE_PATH';
+
 // Object to test
 let fileReader;
 
@@ -41,39 +43,34 @@ describe('FileLoader Tests', ()=>{
       const expectedResponse = ['foo1','foo2','foo3'];
       mockReadInterface.lines = expectedResponse;
 
-      const actualResponse = await fileReader.loadFile('path');
+      const actualResponse = await fileReader.loadFile(samplePath);
 
       expect(actualResponse).to.eql(expectedResponse);
-      // const machine_id = 1234;
-      // const machine_id_int = 2345;
-      // const expectedRawResponse = [{a:'fooa',b:'foob',c:'fooc'}];
-      // mockGcpDatastore.int.restore();
-      // const gcpDb_int_stub = sinon.stub(mockGcpDatastore, 'int');
-      // gcpDb_int_stub.returns(machine_id_int);
-      // const ds_runQuery_stub = sinon.stub(datastore, '_runQuery');
-      // ds_runQuery_stub.returns(expectedRawResponse);
-
-      // const actualResponse = await datastore.latest_telem_for_machine(machine_id);
-
-      // sinon.assert.calledOnce(mockGcpDatastore.createQuery);
-      // sinon.assert.calledOnce(mockGcpDatastore.int);
-      // sinon.assert.calledOnce(mockGcpDatastore.filter);
-      // sinon.assert.calledOnce(mockGcpDatastore.order);
-      // sinon.assert.calledOnce(mockGcpDatastore.limit);
-      // sinon.assert.calledOnce(ds_runQuery_stub);
-      // sinon.assert.calledWithExactly(mockGcpDatastore.createQuery, datastore.kioskTelemetryKind);
-      // sinon.assert.calledWithExactly(mockGcpDatastore.filter, 'machine_id', '=', machine_id_int);
-      // sinon.assert.calledWithExactly(mockGcpDatastore.order, 'timeEventSec', {descending: true});
-      // sinon.assert.calledWithExactly(mockGcpDatastore.limit, 1);
-      // sinon.assert.calledWithExactly(ds_runQuery_stub, mockGcpDatastore);
-      // expect(actualResponse).to.eql(expectedRawResponse);
+      sinon.assert.calledOnce(mockFs.createReadStream);
+      sinon.assert.calledWithExactly(mockFs.createReadStream, samplePath);
+      sinon.assert.calledOnce(mockReadStream.on);
+      sinon.assert.calledWith(mockReadStream.on, 'error');
+      sinon.assert.calledOnce(mockReadline.createInterface);
+      sinon.assert.calledWithExactly(mockReadline.createInterface, {input:mockReadStream});
+      sinon.assert.calledTwice(mockReadInterface.on);
+      sinon.assert.calledWith(mockReadInterface.on, 'line');
+      sinon.assert.calledWith(mockReadInterface.on, 'close');
     });
 
     it(`correctly parses file - empty file`, async ()=>{
       const expectedResponse = [];
       mockReadInterface.lines = expectedResponse;
 
-      const actualResponse = await fileReader.loadFile('path');
+      const actualResponse = await fileReader.loadFile(samplePath);
+
+      expect(actualResponse).to.eql(expectedResponse);
+    });
+
+    it(`correctly parses file - 4 identical lines`, async ()=>{
+      const expectedResponse = ['same','same','same','same'];
+      mockReadInterface.lines = expectedResponse;
+
+      const actualResponse = await fileReader.loadFile(samplePath);
 
       expect(actualResponse).to.eql(expectedResponse);
     });
