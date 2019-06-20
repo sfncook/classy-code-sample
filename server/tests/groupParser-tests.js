@@ -6,13 +6,9 @@ chai.use(sinonChai);
 
 const GroupParser = require('../groupParser');
 
-// Mocks for injection
-
-// Object to test
 let groupParser;
 
 const init = ()=>{
-  //Object to test
   groupParser = new GroupParser();
 };
 
