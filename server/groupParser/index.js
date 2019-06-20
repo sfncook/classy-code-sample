@@ -3,6 +3,8 @@ const _ = require('lodash');
 module.exports = class GroupParser {
   constructor() {
     this.parse = this.parse.bind(this);
+    this.findAll = this.findAll.bind(this);
+    this.findSingle = this.findSingle.bind(this);
   }
 
   parse(groupStrs) {
