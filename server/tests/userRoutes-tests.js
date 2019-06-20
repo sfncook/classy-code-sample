@@ -18,7 +18,6 @@ let mockConfig;
 let mockFileLoader;
 let mockUserParser;
 let mockGroupParser;
-let mockNext;
 
 let defaultRequest = {
   method:'',
@@ -38,14 +37,12 @@ const init = ()=>{
   mockUserParser = new MockUserParser(sinon);
   mockGroupParser = new MockGroupParser(sinon);
 
-  const nextCallback = ()=>{};
-  mockNext = sinon.spy(nextCallback);
-
   //Object to test
   userRoutes = new UserRoutes(mockLogger, mockConfig, mockFileLoader, mockUserParser, mockGroupParser);
 };
 
 describe('UserRoutes Tests', function () {
+  
   describe('getUsers', function () {
     beforeEach(init);
 
@@ -55,7 +52,6 @@ describe('UserRoutes Tests', function () {
 
       const expectedLoadFileLines = 'expectedLoadFileLines';
       userRoutes.usersPath = 'userRoutes.usersPath';
-      userRoutes.groupsPath = 'userRoutes.groupsPath';
       mockFileLoader.loadFile.restore();
       sinon.stub(mockFileLoader, 'loadFile').returns(Promise.resolve(expectedLoadFileLines));
       const expectedResponse = 'expectedResponse';
@@ -70,7 +66,40 @@ describe('UserRoutes Tests', function () {
       sinon.assert.calledWithExactly(mockUserParser.parse, expectedLoadFileLines);
       sinon.assert.calledOnce(res.json);
       sinon.assert.calledWithExactly(res.json, expectedResponse);
-      sinon.assert.notCalled(mockNext);
+    });
+
+  });
+
+  describe('getUser', function () {
+    beforeEach(init);
+
+    it('simple call succeeds', async ()=>{
+      const req = mockReq(defaultRequest);
+      const res = mockRes();
+      const expectedUid = 'expectedUid';
+      req.params.uid = expectedUid;
+
+      const expectedLoadFileLines = 'expectedLoadFileLines';
+      userRoutes.usersPath = 'userRoutes.usersPath';
+      mockFileLoader.loadFile.restore();
+      sinon.stub(mockFileLoader, 'loadFile').returns(Promise.resolve(expectedLoadFileLines));
+      const expectedResponse1 = 'expectedResponse1';
+      const expectedResponse2 = 'expectedResponse2';
+      mockUserParser.parse.restore();
+      sinon.stub(mockUserParser, 'parse').returns(expectedResponse1);
+      mockUserParser.findSingle.restore();
+      sinon.stub(mockUserParser, 'findSingle').returns(expectedResponse2);
+
+      await userRoutes.getUser(req, res);
+
+      sinon.assert.calledOnce(mockFileLoader.loadFile);
+      sinon.assert.calledWithExactly(mockFileLoader.loadFile, userRoutes.usersPath);
+      sinon.assert.calledOnce(mockUserParser.parse);
+      sinon.assert.calledWithExactly(mockUserParser.parse, expectedLoadFileLines);
+      sinon.assert.calledOnce(mockUserParser.findSingle);
+      sinon.assert.calledWithExactly(mockUserParser.findSingle, expectedResponse1, {uid:expectedUid});
+      sinon.assert.calledOnce(res.json);
+      sinon.assert.calledWithExactly(res.json, expectedResponse2);
     });
 
   });
