@@ -34,13 +34,16 @@ const init = ()=>{
 
 describe('FileLoader Tests', ()=>{
 
-  describe('latest_telem_for_machine', ()=>{
+  describe('loadFile', ()=>{
     beforeEach(init);
 
-    it(`(positive) correctly parses file`, async ()=>{
-      mockFs.createReadStream.restore();
-      sinon.stub(mockFs, 'createReadStream').returns(mockReadStream);
+    it(`correctly parses file - 3 lines`, async ()=>{
+      const expectedResponse = ['foo1','foo2','foo3'];
+      mockReadInterface.lines = expectedResponse;
 
+      const actualResponse = await fileReader.loadFile('path');
+
+      expect(actualResponse).to.eql(expectedResponse);
       // const machine_id = 1234;
       // const machine_id_int = 2345;
       // const expectedRawResponse = [{a:'fooa',b:'foob',c:'fooc'}];
@@ -64,6 +67,15 @@ describe('FileLoader Tests', ()=>{
       // sinon.assert.calledWithExactly(mockGcpDatastore.limit, 1);
       // sinon.assert.calledWithExactly(ds_runQuery_stub, mockGcpDatastore);
       // expect(actualResponse).to.eql(expectedRawResponse);
+    });
+
+    it(`correctly parses file - empty file`, async ()=>{
+      const expectedResponse = [];
+      mockReadInterface.lines = expectedResponse;
+
+      const actualResponse = await fileReader.loadFile('path');
+
+      expect(actualResponse).to.eql(expectedResponse);
     });
   });
 

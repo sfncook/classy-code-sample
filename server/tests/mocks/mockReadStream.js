@@ -6,5 +6,7 @@ module.exports = class MockReadStream {
     }
   }
 
-  on(event, callback) {}
+  on(event, callback) {
+    
+  }
 };
